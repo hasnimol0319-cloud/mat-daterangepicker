@@ -1,0 +1,23 @@
+<mat-form-field appearance="outline" class="mdr-field" #fieldRef>
+
+  <mat-label *ngIf="label">{{ label }}</mat-label>
+
+  <!-- Single read-only text input showing "start – end" -->
+  <input
+    matInput
+    readonly
+    [value]="displayValue"
+    [placeholder]="i18n.lang() === 'km' ? 'ជ្រើសរើសកាលបរិច្ឆេទ' : 'Select date range'"
+    class="mdr-field__input" />
+
+  <!-- Calendar toggle icon -->
+  <button
+    matSuffix
+    mat-icon-button
+    type="button"
+    (click)="togglePicker()"
+    [class.mdr-field__icon--active]="isOpen">
+    <mat-icon>date_range</mat-icon>
+  </button>
+
+</mat-form-field>

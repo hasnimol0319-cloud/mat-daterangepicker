@@ -1,0 +1,54 @@
+<div class="mdr-container">
+
+  <!-- Quick-range sidebar -->
+  <div class="mdr-sidebar" *ngIf="showCustomRanges">
+    <button
+      *ngFor="let r of quickRanges; trackBy: trackByIndex"
+      class="mdr-quick-btn"
+      [class.mdr-quick-btn--active]="activeQuickRangeKey === r.key"
+      (click)="selectQuickRange(r)"
+      type="button">
+      {{ r.label }}
+    </button>
+  </div>
+
+  <!-- Right panel: calendars + footer -->
+  <div class="mdr-right-panel">
+    <div class="mdr-calendars">
+
+      <!-- Left mat-calendar -->
+      <mat-calendar
+        [selected]="selectedRange"
+        [minDate]="minDate"
+        [maxDate]="maxDate"
+        [comparisonStart]="selectedRange.start"
+        [comparisonEnd]="selectedRange.end"
+        (selectedChange)="onDateSelected($event)">
+      </mat-calendar>
+
+      <!-- Right mat-calendar (next month) -->
+      <mat-calendar
+        *ngIf="dualView"
+        [selected]="selectedRange"
+        [startAt]="rightCalendarStart"
+        [minDate]="minDate"
+        [maxDate]="maxDate"
+        [comparisonStart]="selectedRange.start"
+        [comparisonEnd]="selectedRange.end"
+        (selectedChange)="onDateSelected($event)">
+      </mat-calendar>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="mdr-footer" *ngIf="applyButton">
+      <button class="mdr-btn mdr-btn--clear" (click)="clearRange()" type="button">
+        {{ clearLabel }}
+      </button>
+      <button class="mdr-btn mdr-btn--apply" (click)="applyRange()" type="button">
+        {{ applyLabel }}
+      </button>
+    </div>
+  </div>
+
+</div>

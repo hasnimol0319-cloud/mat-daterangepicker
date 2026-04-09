@@ -1,0 +1,134 @@
+// ── Tokens ────────────────────────────────────────────────────────────────────
+$primary:       #3f51b5;
+$primary-light: #e8eaf6;
+$primary-dark:  #303f9f;
+$border:        #e0e0e0;
+$text:          #212121;
+$text-muted:    #757575;
+$sidebar-bg:    #fafafa;
+
+// ── Outer wrapper ──────────────────────────────────────────────────────────────
+.mdr-container {
+  display: inline-flex;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 24px rgba(0,0,0,.14);
+  overflow: hidden;
+  font-family: 'Roboto', sans-serif;
+}
+
+// ── Sidebar ────────────────────────────────────────────────────────────────────
+.mdr-sidebar {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0;
+  border-right: 1px solid $border;
+  min-width: 152px;
+  background: $sidebar-bg;
+}
+
+.mdr-quick-btn {
+  display: block;
+  width: 100%;
+  padding: 9px 20px;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 13.5px;
+  color: $text;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: background .12s;
+
+  &:hover { background: $primary-light; color: $primary; }
+
+  &--active {
+    background: $primary !important;
+    color: #fff !important;
+    font-weight: 500;
+    margin: 2px 10px;
+    padding: 9px 10px;
+    width: calc(100% - 20px);
+    border-radius: 6px;
+  }
+}
+
+// ── Right panel ───────────────────────────────────────────────────────────────
+.mdr-right-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.mdr-calendars {
+  display: flex;
+  gap: 0;
+
+  // Separate dual calendars with a divider
+  mat-calendar + mat-calendar {
+    border-left: 1px solid $border;
+  }
+
+  // Constrain each mat-calendar to a fixed width
+  mat-calendar {
+    width: 296px;
+    padding: 8px;
+  }
+}
+
+// ── Override mat-calendar to match our design ─────────────────────────────────
+
+// Header month/year button
+.mat-calendar-header {
+  padding: 8px 8px 0;
+}
+
+// Range highlight colour (uses Material CSS vars)
+.mat-calendar-body-in-range::before {
+  background: $primary-light !important;
+}
+
+.mat-calendar-body-range-start::before,
+.mat-calendar-body-range-end::before {
+  background: $primary-light !important;
+}
+
+.mat-calendar-body-selected {
+  background-color: $primary !important;
+  color: #fff !important;
+}
+
+.mat-calendar-body-comparison-start:not(.mat-calendar-body-in-comparison-range)::before,
+.mat-calendar-body-comparison-end:not(.mat-calendar-body-in-comparison-range)::before,
+.mat-calendar-body-in-comparison-range::before {
+  background: $primary-light !important;
+}
+
+// Today marker
+.mat-calendar-body-today:not(.mat-calendar-body-selected) {
+  border-color: #9fa8da !important;
+}
+
+// ── Footer ────────────────────────────────────────────────────────────────────
+.mdr-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 12px 16px;
+  border-top: 1px solid $border;
+  gap: 10px;
+}
+
+.mdr-btn {
+  padding: 8px 22px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+  transition: background .12s;
+
+  &--clear { background: transparent; color: $primary; &:hover { background: $primary-light; } }
+  &--apply { background: $primary; color: #fff;        &:hover { background: $primary-dark;  } }
+}

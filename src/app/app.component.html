@@ -1,0 +1,123 @@
+<div class="demo-page">
+
+  <!-- Header with language toggle -->
+  <header class="demo-header">
+    <div class="demo-header__text">
+      <h1>mat-daterangepicker</h1>
+      <p class="demo-subtitle">Angular 18 · Angular Material · Standalone · i18n</p>
+    </div>
+    <div class="lang-toggle">
+      <button
+        class="lang-btn"
+        [class.lang-btn--active]="i18n.lang() === 'en'"
+        (click)="setLang('en')"
+        type="button">
+        🇺🇸 English
+      </button>
+      <button
+        class="lang-btn"
+        [class.lang-btn--active]="i18n.lang() === 'km'"
+        (click)="setLang('km')"
+        type="button">
+        🇰🇭 ភាសាខ្មែរ
+      </button>
+    </div>
+  </header>
+
+
+  
+  <mat-daterangepicker-field
+  [label]="i18n.lang() === 'km' ? 'កាលបរិច្ឆេទចាប់ផ្តើម & កាលបរិច្ឆេទបញ្ចប់' : 'Start Date & End Date'"
+  [startControl]="startCtrl"
+  [endControl]="endCtrl"
+  [dualView]="true"
+  [showCustomRanges]="true"
+  (rangeSelected)="onRangeSelected($event)">
+</mat-daterangepicker-field>
+
+  <!-- Demo 1: Full featured -->
+  <section class="demo-section">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          {{ i18n.lang() === 'km' ? 'មុខងារពេញលេញ' : 'Full-featured picker' }}
+        </mat-card-title>
+        <mat-card-subtitle>dualView · showCustomRanges · applyButton</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="picker-wrapper">
+          <mat-daterangepicker
+            [dualView]="true"
+            [showCustomRanges]="true"
+            [applyButton]="true"
+            (apply)="onApply('range1', $event)"
+            (rangeChange)="onApply('range1', $event)">
+          </mat-daterangepicker>
+        </div>
+        <div class="result-row">
+          <mat-icon>date_range</mat-icon>
+          <span class="result-label">{{ i18n.lang() === 'km' ? 'បានជ្រើស:' : 'Selected:' }}</span>
+          <span class="result-value">{{ rangeLabel(range1()) }}</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </section>
+
+  <!-- Demo 2: No sidebar -->
+  <section class="demo-section">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          {{ i18n.lang() === 'km' ? 'គ្មានបន្ទះផ្លូវកាត់' : 'No quick-range sidebar' }}
+        </mat-card-title>
+        <mat-card-subtitle>dualView · showCustomRanges=false · applyButton</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="picker-wrapper">
+          <mat-daterangepicker
+            [dualView]="true"
+            [showCustomRanges]="false"
+            [applyButton]="true"
+            (apply)="onApply('range2', $event)">
+          </mat-daterangepicker>
+        </div>
+        <div class="result-row">
+          <mat-icon>date_range</mat-icon>
+          <span class="result-label">{{ i18n.lang() === 'km' ? 'បានជ្រើស:' : 'Selected:' }}</span>
+          <span class="result-value">{{ rangeLabel(range2()) }}</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </section>
+
+  <!-- Demo 3: Single calendar -->
+  <section class="demo-section">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          {{ i18n.lang() === 'km' ? 'ប្រតិទិនតែមួយ' : 'Single calendar, no apply button' }}
+        </mat-card-title>
+        <mat-card-subtitle>dualView=false · showCustomRanges · applyButton=false</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="picker-wrapper">
+          <mat-daterangepicker
+            [dualView]="false"
+            [showCustomRanges]="true"
+            [applyButton]="false"
+            (apply)="onApply('range3', $event)"
+            (rangeChange)="onApply('range3', $event)">
+          </mat-daterangepicker>
+        </div>
+        <div class="result-row">
+          <mat-icon>date_range</mat-icon>
+          <span class="result-label">{{ i18n.lang() === 'km' ? 'បានជ្រើស:' : 'Selected:' }}</span>
+          <span class="result-value">{{ rangeLabel(range3()) }}</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </section>
+
+
+
+</div>
