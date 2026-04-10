@@ -106,7 +106,7 @@ export class CustomDaterangepickerComponent {
 
     const config: OverlayConfig = {
       positionStrategy: posStrategy,
-      scrollStrategy:   this.overlay.scrollStrategies.reposition(),
+      scrollStrategy:   this.overlay.scrollStrategies.block(),
       hasBackdrop:      true,
       backdropClass:    'cdk-overlay-transparent-backdrop',
     };
