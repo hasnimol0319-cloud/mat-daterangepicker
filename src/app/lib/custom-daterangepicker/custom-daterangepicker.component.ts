@@ -1,18 +1,25 @@
 import {
-  Component, Input, Output, EventEmitter,
-  ViewChild, ElementRef, inject,
-  ChangeDetectionStrategy, ChangeDetectorRef,
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  ViewChild,
+  ElementRef,
+  inject,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import { Overlay, OverlayRef, OverlayConfig } from '@angular/cdk/overlay';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 
 import { DateRange, MatDaterangepickerComponent } from '../daterangepicker/daterangepicker.component';
 import { TranslationService } from '../translation.service';
+import { CustomDateFormatterService } from './custom-date-formatter.service';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
@@ -24,65 +31,43 @@ import { MatButtonModule } from '@angular/material/button';
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
   ],
   templateUrl: './custom-daterangepicker.component.html',
   styleUrls: ['./custom-daterangepicker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomDaterangepickerComponent {
-  @Input() label          = '';
-  @Input() startControl   = new FormControl<Date | null>(null);
-  @Input() endControl     = new FormControl<Date | null>(null);
+  @Input() label = '';
+  @Input() startControl = new FormControl<Date | null>(null);
+  @Input() endControl = new FormControl<Date | null>(null);
   @Input() showCustomRanges = true;
-  @Input() dualView         = true;
+  @Input() dualView = true;
 
   @Output() rangeSelected = new EventEmitter<DateRange<Date>>();
 
   @ViewChild('fieldRef') fieldRef!: ElementRef;
 
-  private overlay    = inject(Overlay);
-  private cdr        = inject(ChangeDetectorRef);
-  public  i18n       = inject(TranslationService);
+  private overlay = inject(Overlay);
+  private cdr = inject(ChangeDetectorRef);
+  public i18n = inject(TranslationService);
+  private dateFormatter = inject(CustomDateFormatterService);
   private hostEl = inject(ElementRef<HTMLElement>);
 
   private overlayRef?: OverlayRef;
-  private khmerNumbers = ['០', '១', '២', '៣', '៤', '៥', '៦', '៧', '៨', '៩'];
-  private khmerMonths = [
-    'មករា', 'កុម្ភៈ', 'មីនា', 'មេសា', 'ឧសភា', 'មិថុនា', 'កក្កដា', 'សីហា', 'កញ្ញា', 'តុលា', 'វិច្ឆិកា', 'ធ្នូ'
-  ];
-  private monthsShort = [
-    'Jan','Feb','Mar','Apr','May','Jun',
-    'Jul','Aug','Sep','Oct','Nov','Dec',
-  ];
 
-  get startDate(): Date | null { return this.startControl.value; }
-  get endDate():   Date | null { return this.endControl.value;   }
+  get startDate(): Date | null {
+    return this.startControl.value;
+  }
 
-  // ── Format a date to display string ─────────────────────────────────────
-  private formatDate(d: Date | null): string {
-    if (!d) return '';
-    const month = this.isKhmer
-      ? this.khmerMonths[d.getMonth()]
-      : this.monthsShort[d.getMonth()];
-
-    const day = this.formatNumber(d.getDate());
-    const year = this.formatNumber(d.getFullYear());
-
-    return `${day}-${month}-${year}`;
+  get endDate(): Date | null {
+    return this.endControl.value;
   }
 
   get displayValue(): string {
-    const values = [this.formatDate(this.startDate), this.formatDate(this.endDate)]
-      .filter(Boolean);
-    return values.join(' – ');
+    return this.dateFormatter.formatDisplayValue(this.startDate, this.endDate);
   }
 
-  private formatNumber(value: number): string {
-    return value.toString().replace(/\d/g, d => this.khmerNumbers[+d]);
-  }
-
-  // ── Overlay open/close ───────────────────────────────────────────────────
   togglePicker(): void {
     this.overlayRef ? this.closePicker() : this.openPicker();
   }
@@ -107,8 +92,8 @@ export class CustomDaterangepickerComponent {
     this.overlayRef = this.createOverlay();
     this.overlayRef.backdropClick().subscribe(() => this.closePicker());
 
-    const portal   = new ComponentPortal(MatDaterangepickerComponent);
-    const compRef  = this.overlayRef.attach(portal);
+    const portal = new ComponentPortal(MatDaterangepickerComponent);
+    const compRef = this.overlayRef.attach(portal);
     const instance = compRef.instance;
 
     // Pass current values & config into the picker
@@ -139,9 +124,7 @@ export class CustomDaterangepickerComponent {
     this.cdr.markForCheck();
   }
 
-  get isOpen(): boolean { return !!this.overlayRef; }
-
-  private get isKhmer(): boolean {
-    return this.i18n.lang() === 'km';
+  get isOpen(): boolean {
+    return !!this.overlayRef;
   }
 }
