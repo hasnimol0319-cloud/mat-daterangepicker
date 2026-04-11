@@ -1,4 +1,5 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Injectable, signal, computed, inject } from '@angular/core';
 
 export type LangCode = 'en' | 'km';
 
@@ -25,48 +26,48 @@ export interface DaterangepickerI18n {
 }
 
 const EN: DaterangepickerI18n = {
-  today:        'Today',
-  yesterday:    'Yesterday',
-  last7Days:    'Last 7 Days',
-  last30Days:   'Last 30 Days',
-  thisMonth:    'This Month',
-  lastMonth:    'Last Month',
-  last3Months:  'Last 3 Months',
-  customRange:  'Custom Range',
-  apply:        'Apply',
-  clear:        'Clear',
+  today: 'Today',
+  yesterday: 'Yesterday',
+  last7Days: 'Last 7 Days',
+  last30Days: 'Last 30 Days',
+  thisMonth: 'This Month',
+  lastMonth: 'Last Month',
+  last3Months: 'Last 3 Months',
+  customRange: 'Custom Range',
+  apply: 'Apply',
+  clear: 'Clear',
   months: [
-    'January','February','March','April','May','June',
-    'July','August','September','October','November','December',
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December',
   ],
   monthsShort: [
-    'JAN','FEB','MAR','APR','MAY','JUN',
-    'JUL','AUG','SEP','OCT','NOV','DEC',
+    'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN',
+    'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC',
   ],
-  weekdays: ['Su','Mo','Tu','We','Th','Fr','Sa'],
+  weekdays: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
 
 };
 
 const KM: DaterangepickerI18n = {
-  today:        'ថ្ងៃនេះ',
-  yesterday:    'ម្សិលមិញ',
-  last7Days:    '៧ ថ្ងៃចុងក្រោយ',
-  last30Days:   '៣០ ថ្ងៃចុងក្រោយ',
-  thisMonth:    'ខែនេះ',
-  lastMonth:    'ខែមុន',
-  last3Months:  '៣ ខែចុងក្រោយ',
-  customRange:  'កំណត់ផ្ទាល់ខ្លួន',
-  apply:        'អនុវត្ត',
-  clear:        'សម្អាត',
+  today: 'ថ្ងៃនេះ',
+  yesterday: 'ម្សិលមិញ',
+  last7Days: '៧ ថ្ងៃចុងក្រោយ',
+  last30Days: '៣០ ថ្ងៃចុងក្រោយ',
+  thisMonth: 'ខែនេះ',
+  lastMonth: 'ខែមុន',
+  last3Months: '៣ ខែចុងក្រោយ',
+  customRange: 'កំណត់ផ្ទាល់ខ្លួន',
+  apply: 'អនុវត្ត',
+  clear: 'សម្អាត',
   months: [
-    'មករា','កុម្ភៈ','មីនា','មេសា','ឧសភា','មិថុនា',
-    'កក្កដា','សីហា','កញ្ញា','តុលា','វិច្ឆិកា','ធ្នូ',
+    'មករា', 'កុម្ភៈ', 'មីនា', 'មេសា', 'ឧសភា', 'មិថុនា',
+    'កក្កដា', 'សីហា', 'កញ្ញា', 'តុលា', 'វិច្ឆិកា', 'ធ្នូ',
   ],
   monthsShort: [
-    'មករា','កុម្ភៈ','មីនា','មេសា','ឧសភា','មិថុនា',
-    'កក្កដា','សីហា','កញ្ញា','តុលា','វិច្ឆិកា','ធ្នូ',
+    'មករា', 'កុម្ភៈ', 'មីនា', 'មេសា', 'ឧសភា', 'មិថុនា',
+    'កក្កដា', 'សីហា', 'កញ្ញា', 'តុលា', 'វិច្ឆិកា', 'ធ្នូ',
   ],
-  weekdays: ['អា','ច','អ','ព','ព្រ','សុ','ស'],
+  weekdays: ['អា', 'ច', 'អ', 'ព', 'ព្រ', 'សុ', 'ស'],
 };
 
 const LOCALES: Record<LangCode, DaterangepickerI18n> = { en: EN, km: KM };
@@ -74,6 +75,7 @@ const LOCALES: Record<LangCode, DaterangepickerI18n> = { en: EN, km: KM };
 @Injectable({ providedIn: 'root' })
 export class TranslationService {
   private _lang = signal<LangCode>('en');
+  private _document = inject(DOCUMENT);
 
   readonly lang = this._lang.asReadonly();
 
@@ -81,9 +83,12 @@ export class TranslationService {
 
   setLang(lang: LangCode): void {
     this._lang.set(lang);
+    // :lang(km) CSS selector activates → Battambang font applied to whole app
+    this._document.documentElement.lang = lang;
   }
 
   toggle(): void {
     this._lang.set(this._lang() === 'en' ? 'km' : 'en');
   }
+
 }

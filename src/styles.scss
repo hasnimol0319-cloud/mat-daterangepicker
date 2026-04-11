@@ -8,3 +8,23 @@ body {
   background: #f0f2f5;
   color: #212121;
 }
+
+// Activated automatically when setLang('km') sets <html lang="km">
+:lang(km),
+:lang(km) .mat-typography,
+:lang(km) .mat-calendar,
+:lang(km) .mat-calendar-body-cell-content,
+:lang(km) .mat-calendar-period-button,
+:lang(km) .mat-mdc-form-field,
+:lang(km) .mat-mdc-input-element,
+:lang(km) .mdr-quick-btn,
+:lang(km) .mdr-btn {
+  font-family: 'Battambang', 'Khmer OS Battambang', sans-serif !important;
+}
+
+// ✅ Explicitly protect Material Icons — highest specificity wins
+:lang(km) .material-icons,
+:lang(km) mat-icon,
+:lang(km) .mat-icon {
+  font-family: 'Material Icons' !important;
+}
