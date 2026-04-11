@@ -28,7 +28,7 @@ import {
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  private readonly i18n = inject(TranslationService);
+  public readonly i18n = inject(TranslationService);
 
   readonly range1 = signal<DateRange<Date>>(new DateRange<Date>(null, null));
   readonly range2 = signal<DateRange<Date>>(new DateRange<Date>(null, null));
