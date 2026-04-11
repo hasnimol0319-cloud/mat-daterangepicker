@@ -60,34 +60,26 @@ export class CustomDaterangepickerComponent {
   get endDate():   Date | null { return this.endControl.value;   }
 
   // ── Format a date to display string ─────────────────────────────────────
-  fmt(d: Date | null): string {
+  private formatDate(d: Date | null): string {
     if (!d) return '';
-    const locale = this.i18n.lang() === 'km';
-    const day = locale ? this.convertToKhmerNumber(d.getDate()) : d.getDate();
-    const month = locale ? this.khmerMonths[d.getMonth()] : this.monthsShort[d.getMonth()];
-    const year = locale ? this.convertToKhmerNumber(d.getFullYear()) : d.getFullYear();
+    const month = this.isKhmer
+      ? this.khmerMonths[d.getMonth()]
+      : this.monthsShort[d.getMonth()];
+
+    const day = this.formatNumber(d.getDate());
+    const year = this.formatNumber(d.getFullYear());
+
     return `${day}-${month}-${year}`;
   }
 
   get displayValue(): string {
-    const s = this.fmt(this.startDate);
-    console.log(s);
-    
-    const e = this.fmt(this.endDate);
-    if (!s && !e) return '';
-    if (s && !e)  return s;
-    return `${s} – ${e}`;
+    const values = [this.formatDate(this.startDate), this.formatDate(this.endDate)]
+      .filter(Boolean);
+    return values.join(' – ');
   }
 
-  private convertToKhmerNumber(num: number): string {
-    const digits = num.toString().split('');
-    let khmerNum = '';
-
-    digits.forEach(d => {
-      khmerNum += this.khmerNumbers[Number(d)];
-    });
-
-    return khmerNum;
+  private formatNumber(value: number): string {
+    return value.toString().replace(/\d/g, d => this.khmerNumbers[+d]);
   }
 
   // ── Overlay open/close ───────────────────────────────────────────────────
@@ -95,23 +87,24 @@ export class CustomDaterangepickerComponent {
     this.overlayRef ? this.closePicker() : this.openPicker();
   }
 
-  openPicker(): void {
-    const posStrategy = this.overlay
-      .position()
+  private createOverlay(): OverlayRef {
+    const pos = this.overlay.position()
       .flexibleConnectedTo(this.hostEl)
       .withPositions([
         { originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top', offsetY: 20 },
-        { originX: 'end', originY: 'top',    overlayX: 'end', overlayY: 'bottom', offsetY: -20 },
+        { originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom', offsetY: -20 },
       ]);
 
-    const config: OverlayConfig = {
-      positionStrategy: posStrategy,
-      scrollStrategy:   this.overlay.scrollStrategies.block(),
-      hasBackdrop:      true,
-      backdropClass:    'cdk-overlay-transparent-backdrop',
-    };
+    return this.overlay.create({
+      positionStrategy: pos,
+      scrollStrategy: this.overlay.scrollStrategies.block(),
+      hasBackdrop: true,
+      backdropClass: 'cdk-overlay-transparent-backdrop',
+    });
+  }
 
-    this.overlayRef = this.overlay.create(config);
+  openPicker(): void {
+    this.overlayRef = this.createOverlay();
     this.overlayRef.backdropClick().subscribe(() => this.closePicker());
 
     const portal   = new ComponentPortal(MatDaterangepickerComponent);
@@ -119,11 +112,11 @@ export class CustomDaterangepickerComponent {
     const instance = compRef.instance;
 
     // Pass current values & config into the picker
-    instance.startDate        = this.startDate;
-    instance.endDate          = this.endDate;
-    instance.dualView         = this.dualView;
+    instance.startDate = this.startDate;
+    instance.endDate = this.endDate;
+    instance.dualView = this.dualView;
     instance.showCustomRanges = this.showCustomRanges;
-    instance.applyButton      = true;
+    instance.applyButton = true;
 
     // Re-init the picker with passed values
     instance.ngOnInit();
@@ -147,4 +140,8 @@ export class CustomDaterangepickerComponent {
   }
 
   get isOpen(): boolean { return !!this.overlayRef; }
+
+  private get isKhmer(): boolean {
+    return this.i18n.lang() === 'km';
+  }
 }
